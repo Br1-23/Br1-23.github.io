@@ -1,0 +1,794 @@
+           
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZOMU - Aprende Lenguaje de Señas Mexicano</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+  <style id="app-style">
+    body {
+      font-family: 'Comic Neue', cursive;
+      background-color: #f9fafb;
+      /*background-image: url('https://cdn.pixabay.com/photo/2019/04/14/10/27/book-4126483_1280.jpg');*/
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center;
+    }
+    
+    .card {
+      perspective: 1000px;
+      height: 400px;
+      transition: transform 0.6s;
+    }
+    
+    .progress-bar {
+      transition: width 0.5s ease-in-out;
+    }
+    
+    .animate-bounce-custom {
+      animation: bounce 1s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+    
+    .btn {
+      transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+      transform: scale(1.05);
+    }
+    
+    .theme-card {
+      transition: all 0.3s ease;
+    }
+    
+    .theme-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #f00;
+      border-radius: 50%;
+      animation: fall 3s ease-in infinite;
+    }
+    
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div id="app" class="container mx-auto px-4 py-8">
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="flex flex-col items-center justify-center min-h-screen">
+      <div class="bg-white bg-opacity-90 rounded-2xl p-8 shadow-2xl max-w-3xl w-full">
+        <div class="flex gap-3 justify-center text-5xl font-bold text-center text-purple-600 mb-6">
+          <!-- Logo -->
+          <!--<img src="Recursos/Imagenes/ZOMU.jpeg" alt="ZOMU" class="w-60 h-20 object-contain">-->
+          <span class="text-blue-500" style="padding-top: 10px;">ZOMU</span> 
+          <img src="Recursos/Imagenes/ZOMU-logo.jpeg" alt="ZOMU logo" class="w-16 h-16 object-contain">
+        </div>
+
+        <h2 class="text-2xl text-center text-gray-700 mb-8">¡Aprende Lenguaje de Señas Mexicano jugando!</h2>
+        
+        <div class="flex flex-col md:flex-row items-stretch gap-6 mb-8">
+          <div class="theme-selector flex-1">
+            <h3 class="text-xl font-bold text-purple-600 mb-3">1. Escoge un tema:</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div class="theme-card bg-yellow-100 p-4 rounded-xl shadow-md cursor-pointer border-2 border-transparent hover:border-yellow-400" data-theme="animales">
+                <div class="text-center">
+                  <i class="fas fa-paw text-4xl text-yellow-500 mb-2"></i>
+                  <h4 class="font-bold">Animales</h4>
+                </div>
+              </div>
+              <div class="theme-card bg-red-100 p-4 rounded-xl shadow-md cursor-pointer border-2 border-transparent hover:border-red-400" data-theme="comida">
+                <div class="text-center">
+                  <i class="fas fa-utensils text-4xl text-red-500 mb-2"></i>
+                  <h4 class="font-bold">Comida</h4>
+                </div>
+              </div>
+              <div class="theme-card bg-green-100 p-4 rounded-xl shadow-md cursor-pointer border-2 border-transparent hover:border-pink-400" data-theme="calendario">
+                <div class="text-center">
+                  <i class="fas fa-calendar text-4xl text-green-500 mb-2"></i>
+                  <h4 class="font-bold">Calendario</h4>
+                </div>
+              </div>
+              <div class="theme-card bg-blue-100 p-4 rounded-xl shadow-md cursor-pointer border-2 border-transparent hover:border-blue-400" data-theme="cotidiano">
+                <div class="text-center">
+                  <i class="fas fa-home text-4xl text-blue-500 mb-2"></i>
+                  <h4 class="font-bold">Vida Cotidiana</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex flex-col md:flex-row items-stretch gap-6 mb-8">
+          <div class="level-selector flex-1">
+            <h3 class="text-xl font-bold text-purple-600 mb-3">2. Selecciona un nivel:</h3>
+            <div class="flex flex-wrap gap-3">
+              <button class="level-btn px-5 py-2 bg-blue-100 rounded-full text-blue-700 font-bold hover:bg-blue-200 border-2 border-transparent focus:border-blue-500" data-level="diccionario">Diccionario</button>
+              <button class="level-btn px-5 py-2 bg-green-100 rounded-full text-green-700 font-bold hover:bg-green-200 border-2 border-transparent focus:border-green-500" data-level="principiante">Principiante</button>
+              <button class="level-btn px-5 py-2 bg-yellow-100 rounded-full text-yellow-700 font-bold hover:bg-yellow-200 border-2 border-transparent focus:border-yellow-500" data-level="intermedio">Intermedio</button>
+              <button class="level-btn px-5 py-2 bg-red-100 rounded-full text-red-700 font-bold hover:bg-red-200 border-2 border-transparent focus:border-red-500" data-level="avanzado">Avanzado</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="text-center">
+          <button id="start-learning" class="btn bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-8 rounded-full text-xl font-bold shadow-lg hover:from-purple-700 hover:to-indigo-700 disabled:opacity-50" disabled>
+            ¡Comenzar a Aprender! <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Learning Screen -->
+    <div id="learning-screen" class="hidden">
+      <div class="fixed top-0 left-0 w-full bg-white bg-opacity-95 shadow-md z-10 px-4 py-3">
+        <div class="container mx-auto">
+          <div class="flex items-center justify-between">
+            <button id="back-to-menu" class="flex items-center text-purple-600 hover:text-purple-800">
+              <i class="fas fa-arrow-left mr-2"></i> Menú
+            </button>
+            
+            <div class="flex items-center">
+              <span id="theme-display" class="mr-2 font-bold text-gray-700">Tema: </span>
+              <span id="level-display" class="mr-2 font-bold text-gray-700">Nivel: </span>
+            </div>
+          </div>
+          
+          <div class="mt-3">
+            <div class="w-full bg-gray-200 rounded-full h-4">
+              <div id="progress-bar" class="progress-bar bg-gradient-to-r from-green-400 to-blue-500 h-4 rounded-full text-xs text-center leading-4 text-white" style="width: 0%">0%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="pt-24 pb-8">
+        <div class="max-w-2xl mx-auto">
+          <!-- Card container -->
+          <div id="card-container" class="mb-6">
+            <div class="bg-white rounded-xl shadow-2xl overflow-hidden">
+              <!-- Card image -->
+              <div class="h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
+                <img id="card-image" src="" alt="Imagen de seña" class="w-full h-full object-contain">
+              </div>
+              
+              <!-- Card content -->
+              <div class="p-6">
+                <div class="flex justify-center ms-center gap-5 mb-4">
+                  <div class="text-center">
+                    <h2 id="card-word" class="text-3xl font-bold text-gray-800"></h2>
+                    <p id="card-english" class="text-lg text-gray-600"></p>
+                  </div>
+                  <button id="play-audio" class="hidden bg-blue-500 hover:bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center">
+                    <i class="fas fa-volume-up text-xl"></i>
+                  </button>
+                </div>
+                
+                <div class="bg-yellow-50 rounded-lg p-3 mb-4 text-center">
+                  <div>
+                    <p class="text-sm font-bold text-yellow-800">Pronunciación:</p>
+                    <p id="card-pinyin" class="text-lg text-yellow-700"></p>
+                  </div>
+                </div>
+                
+                <div class="flex justify-center gap-4">
+                  <button id="next-card" class="btn bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 px-6 rounded-lg font-bold shadow-md flex items-center">
+                    Siguiente <i class="fas fa-arrow-right ml-2"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Summary Screen -->
+    <div id="summary-screen" class="hidden">
+      <div class="flex items-center justify-center min-h-screen">
+        <div class="bg-white bg-opacity-90 rounded-2xl p-8 shadow-2xl max-w-xl w-full">
+          <div class="text-center">
+            <h2 class="text-3xl font-bold text-purple-600 mb-4">¡Felicidades!</h2>
+            <p class="text-xl text-gray-700 mb-6">Has completado todas las tarjetas de este tema</p>
+            
+            <div class="mb-8">
+              <div class="w-full bg-gray-200 rounded-full h-8 mb-4">
+                <div id="summary-progress" class="progress-bar bg-gradient-to-r from-green-400 to-blue-500 h-8 rounded-full text-center leading-8 text-white font-bold" style="width: 100%">100%</div>
+              </div>
+              <p class="text-gray-700">¡Has aprendido <span id="cards-learned" class="font-bold text-green-600">10</span> nuevas palabras!</p>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+              <button id="restart-same" class="btn bg-yellow-500 hover:bg-yellow-600 text-white py-3 px-6 rounded-lg font-bold shadow-md">
+                <i class="fas fa-redo mr-2"></i> Repetir mismo tema
+              </button>
+              <button id="choose-new" class="btn bg-purple-600 hover:bg-purple-700 text-white py-3 px-6 rounded-lg font-bold shadow-md">
+                <i class="fas fa-th mr-2"></i> Elegir nuevo tema
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script id="app-script">
+    // Local storage keys
+    const STORAGE_KEY = 'senasmex_app';
+    const CARDS_KEY = 'senasmex_cards';
+    
+    // App state
+    let appState = {
+      selectedTheme: null,
+      selectedLevel: null,
+      currentCardIndex: 0,
+      completedCards: 0
+    };
+    
+    // DOM elements
+    const welcomeScreen = document.getElementById('welcome-screen');
+    const learningScreen = document.getElementById('learning-screen');
+    const summaryScreen = document.getElementById('summary-screen');
+    const startBtn = document.getElementById('start-learning');
+    const backToMenuBtn = document.getElementById('back-to-menu');
+    const nextCardBtn = document.getElementById('next-card');
+    const playAudioBtn = document.getElementById('play-audio');
+    const progressBar = document.getElementById('progress-bar');
+    const themeDisplay = document.getElementById('theme-display');
+    const levelDisplay = document.getElementById('level-display');
+    const restartSameBtn = document.getElementById('restart-same');
+    const chooseNewBtn = document.getElementById('choose-new');
+    
+    // Card elements
+    const cardImage = document.getElementById('card-image');
+    const cardWord = document.getElementById('card-word');
+    const cardEnglish = document.getElementById('card-english');
+    const cardPinyin = document.getElementById('card-pinyin');
+    
+    // Theme selection
+    const themeCards = document.querySelectorAll('.theme-card');
+    themeCards.forEach(card => {
+      card.addEventListener('click', () => {
+        themeCards.forEach(c => c.classList.remove('border-2', 'border-purple-500'));
+        card.classList.add('border-2', 'border-purple-500');
+        appState.selectedTheme = card.dataset.theme;
+        checkStartButton();
+      });
+    });
+    
+    // Level selection
+    const levelBtns = document.querySelectorAll('.level-btn');
+    levelBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        levelBtns.forEach(b => b.classList.remove('border-2', 'border-purple-500'));
+        btn.classList.add('border-2', 'border-purple-500');
+        appState.selectedLevel = btn.dataset.level;
+        checkStartButton();
+      });
+    });
+    
+    // Check if start button can be enabled
+    function checkStartButton() {
+      if (appState.selectedTheme && appState.selectedLevel) {
+        startBtn.disabled = false;
+      } else {
+        startBtn.disabled = true;
+      }
+    }
+    
+    // Event listeners
+    startBtn.addEventListener('click', startLearning);
+    backToMenuBtn.addEventListener('click', backToMenu);
+    nextCardBtn.addEventListener('click', showNextCard);
+    playAudioBtn.addEventListener('click', playCardAudio);
+    restartSameBtn.addEventListener('click', restartSameTopic);
+    chooseNewBtn.addEventListener('click', backToMenu);
+    
+    // Theme display names mapping
+    const themeNames = {
+      'animales': 'Animales',
+      'comida': 'Comida',
+      'cotidiano': 'Vida Cotidiana',
+      'calendario':'Calendario'
+    };
+    
+    // Level display names mapping
+    const levelNames = {
+      'diccionario': 'Diccionario',
+      'principiante': 'Principiante',
+      'intermedio': 'Intermedio',
+      'avanzado': 'Avanzado'
+    };
+    
+    // Load app state from local storage
+    function loadAppState() {
+      const savedState = localStorage.getItem(STORAGE_KEY);
+      if (savedState) {
+        appState = JSON.parse(savedState);
+      }
+    }
+    
+    // Save app state to local storage
+    function saveAppState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+    }
+    
+    // Start learning session
+    function startLearning() {
+      appState.currentCardIndex = 0;
+      appState.completedCards = 0;
+      saveAppState();
+      
+      fetchCards();
+      
+      welcomeScreen.classList.add('hidden');
+      learningScreen.classList.remove('hidden');
+      summaryScreen.classList.add('hidden');
+      
+      themeDisplay.textContent = `Tema: ${themeNames[appState.selectedTheme]}`;
+      levelDisplay.textContent = `Nivel: ${levelNames[appState.selectedLevel]}`;
+      
+      updateProgress();
+    }
+    
+    // Go back to menu
+    function backToMenu() {
+      welcomeScreen.classList.remove('hidden');
+      learningScreen.classList.add('hidden');
+      summaryScreen.classList.add('hidden');
+    }
+    
+    // Sample card data - this would come from an API in a real app
+    let cards = [];
+    
+    // Fetch cards from API (simulated)
+    function fetchCards() {
+      const savedCards = localStorage.getItem(CARDS_KEY);
+      if (savedCards) {
+        //cards = JSON.parse(savedCards);
+        //showCurrentCard();
+        //return;
+      }
+      
+      // Simulate fetching cards based on theme and level
+      if (appState.selectedTheme === 'animales') {
+        cards = [
+          {
+            word: 'Edduuuuuar',
+            english: 'Dog',
+            pinyin: 'PE-RRO',
+            image: 'https://i.imgur.com/HKHyzKh.jpeg',
+            audioUrl: ''
+          },
+          {
+            word: 'Gato',
+            english: 'Cat',
+            pinyin: 'GA-TO',
+            image: 'agua.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Conejo',
+            english: 'Rabbit',
+            pinyin: 'CO-NE-JO',
+            image: 'https://cdn.pixabay.com/photo/2018/06/28/00/11/rabbit-3502614_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Pájaro',
+            english: 'Bird',
+            pinyin: 'PA-JA-RO',
+            image: 'https://cdn.pixabay.com/photo/2017/02/07/16/47/kingfisher-2046453_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Caballo',
+            english: 'Horse',
+            pinyin: 'CA-BA-LLO',
+            image: 'https://cdn.pixabay.com/photo/2014/09/21/17/56/horse-455246_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Vaca',
+            english: 'Cow',
+            pinyin: 'VA-CA',
+            image: 'https://cdn.pixabay.com/photo/2013/11/28/10/36/cow-220306_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Elefante',
+            english: 'Elephant',
+            pinyin: 'E-LE-FAN-TE',
+            image: 'https://cdn.pixabay.com/photo/2016/11/14/04/45/elephant-1822636_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Tortuga',
+            english: 'Turtle',
+            pinyin: 'TOR-TU-GA',
+            image: 'https://cdn.pixabay.com/photo/2018/09/18/19/18/sea-turtle-3686239_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'León',
+            english: 'Lion',
+            pinyin: 'LE-ON',
+            image: 'https://cdn.pixabay.com/photo/2018/07/31/22/08/lion-3576045_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Mono',
+            english: 'Monkey',
+            pinyin: 'MO-NO',
+            image: 'https://cdn.pixabay.com/photo/2015/09/09/19/56/monkey-933559_1280.jpg',
+            audioUrl: ''
+          }
+        ];
+      } else if (appState.selectedTheme === 'comida') {
+        cards = [
+          {
+            word: 'Manzana',
+            english: 'Apple',
+            pinyin: 'MAN-ZA-NA',
+            image: 'https://cdn.pixabay.com/photo/2016/01/05/13/58/apple-1122537_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Pan',
+            english: 'Bread',
+            pinyin: 'PAN',
+            image: 'https://cdn.pixabay.com/photo/2016/03/27/21/59/bread-1284438_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Leche',
+            english: 'Milk',
+            pinyin: 'LE-CHE',
+            image: 'https://cdn.pixabay.com/photo/2017/07/05/15/41/milk-2474993_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Agua',
+            english: 'Water',
+            pinyin: 'A-GUA',
+            image: 'https://cdn.pixabay.com/photo/2014/12/24/05/02/drop-of-water-578897_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Huevo',
+            english: 'Egg',
+            pinyin: 'HUE-VO',
+            image: 'https://cdn.pixabay.com/photo/2015/09/17/17/19/egg-944495_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Pollo',
+            english: 'Chicken',
+            pinyin: 'PO-LLO',
+            image: 'https://cdn.pixabay.com/photo/2016/03/05/19/02/hamburger-1238246_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Pasta',
+            english: 'Pasta',
+            pinyin: 'PAS-TA',
+            image: 'https://cdn.pixabay.com/photo/2018/07/18/19/12/pasta-3547078_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Queso',
+            english: 'Cheese',
+            pinyin: 'QUE-SO',
+            image: 'https://cdn.pixabay.com/photo/2017/09/09/19/03/cheese-2733592_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Arroz',
+            english: 'Rice',
+            pinyin: 'A-RROZ',
+            image: 'https://cdn.pixabay.com/photo/2018/04/29/11/54/rice-plant-3359997_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Helado',
+            english: 'Ice cream',
+            pinyin: 'HE-LA-DO',
+            image: 'https://cdn.pixabay.com/photo/2018/08/16/22/59/ice-cream-3611698_1280.jpg',
+            audioUrl: ''
+          }
+        ];
+      } else if(appState.selectedTheme === 'cotidiano'){
+        cards = [
+          {
+            word: 'Casa',
+            english: 'House',
+            pinyin: 'CA-SA',
+            image: 'https://cdn.pixabay.com/photo/2016/11/18/17/46/house-1836070_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Familia',
+            english: 'Family',
+            pinyin: 'FA-MI-LIA',
+            image: 'https://cdn.pixabay.com/photo/2018/03/03/20/02/laptop-3196481_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Escuela',
+            english: 'School',
+            pinyin: 'ES-CUE-LA',
+            image: 'https://cdn.pixabay.com/photo/2017/07/02/09/03/books-2463779_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Amigo',
+            english: 'Friend',
+            pinyin: 'A-MI-GO',
+            image: 'https://cdn.pixabay.com/photo/2018/04/27/03/50/woman-3353702_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Jugar',
+            english: 'To play',
+            pinyin: 'JU-GAR',
+            image: 'https://cdn.pixabay.com/photo/2016/03/05/20/01/toy-1238667_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Dormir',
+            english: 'To sleep',
+            pinyin: 'DOR-MIR',
+            image: 'https://cdn.pixabay.com/photo/2014/12/16/22/25/woman-570883_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Baño',
+            english: 'Bathroom',
+            pinyin: 'BA-ÑO',
+            image: 'https://cdn.pixabay.com/photo/2016/02/19/11/25/bathtub-1209640_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Comer',
+            english: 'To eat',
+            pinyin: 'CO-MER',
+            image: 'https://cdn.pixabay.com/photo/2019/04/26/12/41/people-4157150_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Calle',
+            english: 'Street',
+            pinyin: 'CA-LLE',
+            image: 'https://cdn.pixabay.com/photo/2017/08/07/22/10/lake-2608425_1280.jpg',
+            audioUrl: ''
+          },
+          {
+            word: 'Parque',
+            english: 'Park',
+            pinyin: 'PAR-QUE',
+            image: 'https://cdn.pixabay.com/photo/2015/07/09/22/45/tree-838667_1280.jpg',
+            audioUrl: ''
+          }
+        ];
+      }else if(appState.selectedTheme === 'calendario'){
+        cards=[
+          {
+            word: 'Enero',
+            english: 'January',
+            pinyin: 'Ene-ro',
+            image: 'Enero.gif',
+            audioUrl: ''
+          },
+          {
+            word: 'Febrero',
+            english: 'February',
+            pinyin: 'Fe-bre-ro',
+            image: 'Febrero.gif',
+            audioUrl: ''
+          },
+          {
+            word: 'Marzo',
+            english: 'March',
+            pinyin: 'Mar-zo',
+            image: 'Marzo.gif',
+            audioUrl: ''
+          },
+          {
+            word: 'Abril',
+            english: 'April',
+            pinyin: 'A-bril',
+            image: 'Abril.gif',
+            audioUrl: ''
+          },
+          {
+            word: 'mayo',
+            english: 'May',
+            pinyin: 'Ma-yo',
+            image: 'Mayo.gif',
+            audioUrl: ''
+          },
+          {
+            word: 'Junio',
+            english: 'June',
+            pinyin: 'Ju-nio',
+            image: 'Junio.gif',
+            audioUrl: ''
+          },
+          {
+            word: 'Julio',
+            english: 'July',
+            pinyin: 'Ju-lio',
+            image: 'Julio.gif',
+            audioUrl: ''
+          },
+          {
+            word: 'Agosto',
+            english: 'Agust',
+            pinyin: 'A-gos-to',
+            image: 'Agosto.gif',
+            audioUrl: ''
+          },
+          {
+            word: 'Septiembre',
+            english: 'September',
+            pinyin: 'Sep-tiem-bre',
+            image: 'Septiembre.gif',
+            audioUrl: ''
+          },
+          {
+            word: 'Octubre',
+            english: 'october',
+            pinyin: 'oc-tu-bre',
+            image: 'Octubre.gif',
+            audioUrl: ''
+          },
+          {
+            word: 'Noviembre',
+            english: 'November',
+            pinyin: 'no-viem-bre',
+            image: 'Noviembre.gif',
+            audioUrl: ''
+          },
+          {
+            word: 'Diciembre',
+            english: 'December',
+            pinyin: 'Diciembre',
+            image: 'Diciembre.gif',
+            audioUrl: ''
+
+          }
+
+
+        ];
+      }
+      
+      localStorage.setItem(CARDS_KEY, JSON.stringify(cards));
+      showCurrentCard();
+    }
+    
+    // Show current card
+    function showCurrentCard() {
+      if (appState.currentCardIndex >= cards.length) {
+        showSummary();
+        return;
+      }
+      
+      const currentCard = cards[appState.currentCardIndex];
+      
+      cardImage.src = currentCard.image;
+      cardWord.textContent = currentCard.word;
+      cardEnglish.textContent = currentCard.english;
+      cardPinyin.textContent = currentCard.pinyin;
+      
+      updateProgress();
+    }
+    
+    // Show next card
+    function showNextCard() {
+      appState.currentCardIndex++;
+      appState.completedCards++;
+      saveAppState();
+      
+      if (appState.currentCardIndex < cards.length) {
+        showCurrentCard();
+      } else {
+        showSummary();
+      }
+    }
+    
+    // Play card audio
+    function playCardAudio() {
+      // In a real app, this would play the audio file
+      alert('En una aplicación completa, aquí se reproduciría el audio de la palabra.');
+    }
+    
+    // Update progress bar
+    function updateProgress() {
+      const progress = (appState.completedCards / cards.length) * 100;
+      progressBar.style.width = `${progress}%`;
+      progressBar.textContent = `${Math.round(progress)}%`;
+    }
+    
+    // Show summary screen
+    function showSummary() {
+      welcomeScreen.classList.add('hidden');
+      learningScreen.classList.add('hidden');
+      summaryScreen.classList.remove('hidden');
+      
+      document.getElementById('summary-progress').style.width = '100%';
+      document.getElementById('cards-learned').textContent = cards.length;
+      
+      createConfetti();
+    }
+    
+    // Restart same topic
+    function restartSameTopic() {
+      appState.currentCardIndex = 0;
+      appState.completedCards = 0;
+      saveAppState();
+      
+      welcomeScreen.classList.add('hidden');
+      learningScreen.classList.remove('hidden');
+      summaryScreen.classList.add('hidden');
+      
+      showCurrentCard();
+    }
+    
+    // Create confetti effect for celebration
+    function createConfetti() {
+      const confettiContainer = document.createElement('div');
+      confettiContainer.style.position = 'fixed';
+      confettiContainer.style.top = '0';
+      confettiContainer.style.left = '0';
+      confettiContainer.style.width = '100%';
+      confettiContainer.style.height = '100%';
+      confettiContainer.style.pointerEvents = 'none';
+      confettiContainer.style.zIndex = '9999';
+      document.body.appendChild(confettiContainer);
+      
+      const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+      
+      for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = -Math.random() * 20 + 'px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        confetti.style.animationDelay = Math.random() * 5 + 's';
+        confettiContainer.appendChild(confetti);
+      }
+      
+      setTimeout(() => {
+        confettiContainer.remove();
+      }, 8000);
+    }
+    
+    // Initialize app
+    loadAppState();
+  </script>
+</body>
+</html>
