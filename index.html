@@ -142,6 +142,77 @@
       </div>
     </div>
     
+    <!-- Game Screen -->
+    <div id="game-screen" class="hidden">
+      <div class="fixed top-0 left-0 w-full bg-white bg-opacity-95 shadow-md z-10 px-4 py-3">
+        <div class="container mx-auto">
+          <div class="flex items-center justify-between">
+            <button id="game-back-to-menu" class="flex items-center text-purple-600 hover:text-purple-800">
+              <i class="fas fa-arrow-left mr-2"></i> Menú
+            </button>
+            
+            <div class="flex items-center">
+              <span id="game-theme-display" class="mr-2 font-bold text-gray-700">Tema: </span>
+              <span id="game-level-display" class="mr-2 font-bold text-gray-700">Nivel: </span>
+              <span id="game-try-display" class="mr-2 font-bold text-gray-700">Intentos: </span>
+            </div>
+          </div>
+          
+          <div class="mt-3">
+            <div class="w-full bg-gray-200 rounded-full h-4">
+              <div id="game-progress-bar" class="progress-bar bg-gradient-to-r from-green-400 to-blue-500 h-4 rounded-full text-xs text-center leading-4 text-white" style="width: 0%">0%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="pt-24 pb-8">
+        <div class="max-w-2xl mx-auto">
+          <!-- Card container -->
+          <div id="game-card-container" class="mb-6">
+            <div class="bg-white rounded-xl shadow-2xl overflow-hidden">
+              <!-- Card image -->
+              <div class="h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
+                <img id="game-card-image" src="" alt="Imagen de seña" class="w-full h-full object-contain">
+              </div>
+              
+              <!-- Card content -->
+              <div class="p-6">
+                <div class="hidden justify-center ms-center gap-5 mb-4">
+                  <div class="text-center">
+                    <h2 id="card-word" class="text-3xl font-bold text-gray-800"></h2>
+                    <p id="card-english" class="text-lg text-gray-600"></p>
+                  </div>
+                  <button id="play-audio" class="hidden bg-blue-500 hover:bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center">
+                    <i class="fas fa-volume-up text-xl"></i>
+                  </button>
+                </div>
+                
+                <div class="bg-yellow-50 rounded-lg p-3 mb-4 text-center">
+                  <div>
+                    <p class="text-sm font-bold text-yellow-800">¿Qué dice el GIF?:</p>
+                    <p id="game-card-pinyin" class="hidden text-lg text-yellow-700"></p>
+                    <button class="level-btn px-5 py-2 bg-purple-100 rounded-full text-black-700 font-bold shadow-md hover:bg-blue-200 border-2 focus:bg-blue-200 border-purple-500" data-level="diccionario">Opción 1</button>
+                    <button class="level-btn px-5 py-2 bg-purple-100 rounded-full text-black-700 font-bold shadow-md hover:bg-blue-200 border-2 focus:bg-blue-200 border-purple-500" data-level="diccionario">Opción 2</button>
+                    <button class="level-btn px-5 py-2 bg-purple-100 rounded-full text-black-700 font-bold shadow-md hover:bg-blue-200 border-2 focus:bg-blue-200 border-purple-500" data-level="diccionario">Opción 3</button>
+                    <button class="level-btn px-5 py-2 bg-purple-100 rounded-full text-black-700 font-bold shadow-md hover:bg-blue-200 border-2 focus:bg-blue-200 border-purple-500" data-level="diccionario">Opción 4</button>
+                    <button class="level-btn px-5 py-2 bg-purple-100 rounded-full text-black-700 font-bold shadow-md hover:bg-blue-200 border-2 focus:bg-blue-200 border-purple-500" data-level="diccionario">Opción 5</button>
+                    <button class="level-btn px-5 py-2 bg-purple-100 rounded-full text-black-700 font-bold shadow-md hover:bg-blue-200 border-2 focus:bg-blue-200 border-purple-500" data-level="diccionario">Opción 6</button>
+                  </div>
+                </div>
+                
+                <div class="flex justify-center gap-4">
+                  <button id="game-next-card" class="btn bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 px-6 rounded-lg font-bold shadow-md flex items-center">
+                    Siguiente <i class="fas fa-arrow-right ml-2"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <!-- Learning Screen -->
     <div id="learning-screen" class="hidden">
       <div class="fixed top-0 left-0 w-full bg-white bg-opacity-95 shadow-md z-10 px-4 py-3">
@@ -164,7 +235,9 @@
           </div>
         </div>
       </div>
-      
+      <!--
+        
+      -->
       <div class="pt-24 pb-8">
         <div class="max-w-2xl mx-auto">
           <!-- Card container -->
@@ -251,19 +324,26 @@
     // DOM elements
     const welcomeScreen = document.getElementById('welcome-screen');
     const learningScreen = document.getElementById('learning-screen');
+    const gameScreen = document.getElementById('game-screen');
     const summaryScreen = document.getElementById('summary-screen');
     const startBtn = document.getElementById('start-learning');
     const backToMenuBtn = document.getElementById('back-to-menu');
+    const gameBackToMenuBtn = document.getElementById('game-back-to-menu');
     const nextCardBtn = document.getElementById('next-card');
+    const gameNextCardBtn = document.getElementById('game-next-card');
     const playAudioBtn = document.getElementById('play-audio');
     const progressBar = document.getElementById('progress-bar');
+    const gameProgressBar = document.getElementById('game-progress-bar');
     const themeDisplay = document.getElementById('theme-display');
+    const gameThemeDisplay = document.getElementById('game-theme-display');
     const levelDisplay = document.getElementById('level-display');
+    const gameLevelDisplay = document.getElementById('game-level-display');
     const restartSameBtn = document.getElementById('restart-same');
     const chooseNewBtn = document.getElementById('choose-new');
     
     // Card elements
     const cardImage = document.getElementById('card-image');
+    const gameCardImage = document.getElementById('game-card-image');
     const cardWord = document.getElementById('card-word');
     const cardEnglish = document.getElementById('card-english');
     const cardPinyin = document.getElementById('card-pinyin');
@@ -302,7 +382,9 @@
     // Event listeners
     startBtn.addEventListener('click', startLearning);
     backToMenuBtn.addEventListener('click', backToMenu);
+    gameBackToMenuBtn.addEventListener('click', backToMenu);
     nextCardBtn.addEventListener('click', showNextCard);
+    gameNextCardBtn.addEventListener('click', showNextCard);
     playAudioBtn.addEventListener('click', playCardAudio);
     restartSameBtn.addEventListener('click', restartSameTopic);
     chooseNewBtn.addEventListener('click', backToMenu);
@@ -345,19 +427,32 @@
       fetchCards();
       
       welcomeScreen.classList.add('hidden');
-      learningScreen.classList.remove('hidden');
+      hiddenLearnOrGame();
       summaryScreen.classList.add('hidden');
+      //console.log("Valor del tema:", themeNames[appState.selectedTheme]);
       
       themeDisplay.textContent = `Tema: ${themeNames[appState.selectedTheme]}`;
       levelDisplay.textContent = `Nivel: ${levelNames[appState.selectedLevel]}`;
+      gameThemeDisplay.textContent = `Tema: ${themeNames[appState.selectedTheme]}`;
+      gameLevelDisplay.textContent = `Nivel: ${levelNames[appState.selectedLevel]}`;
       
       updateProgress();
     }
-    
+    // Hidden Learning Screen Game Screen
+    function hiddenLearnOrGame() {
+      if (levelNames[appState.selectedLevel] == "Diccionario") {
+        learningScreen.classList.remove('hidden');
+        gameScreen.classList.add('hidden');
+      } else {                                  //Aquí merengues mostramos la página de Learning ó Game
+        learningScreen.classList.add('hidden');
+        gameScreen.classList.remove('hidden');
+      }
+    }
     // Go back to menu
     function backToMenu() {
       welcomeScreen.classList.remove('hidden');
       learningScreen.classList.add('hidden');
+      gameScreen.classList.add('hidden');
       summaryScreen.classList.add('hidden');
     }
     
@@ -377,6 +472,7 @@
       if (appState.selectedTheme === 'animales') {
         cards = [
           {
+          // ESTO DE AQUI 
             word: 'Edduuuuuar',
             english: 'Dog',
             pinyin: 'PE-RRO',
@@ -387,7 +483,7 @@
             word: 'Gato',
             english: 'Cat',
             pinyin: 'GA-TO',
-            image: 'agua.jpg',
+            image: 'Recursos/Imagenes/agua.jpg',
             audioUrl: ''
           },
           {
@@ -599,84 +695,85 @@
             word: 'Enero',
             english: 'January',
             pinyin: 'Ene-ro',
-            image: 'Enero.gif',
+            image: 'Recursos/Gifs/Enero.gif',
             audioUrl: ''
           },
           {
             word: 'Febrero',
             english: 'February',
             pinyin: 'Fe-bre-ro',
-            image: 'Febrero.gif',
+            image: 'Recursos/Gifs/Febrero.gif',
             audioUrl: ''
           },
           {
             word: 'Marzo',
             english: 'March',
             pinyin: 'Mar-zo',
-            image: 'Marzo.gif',
+            image: 'Recursos/Gifs/Marzo.gif',
             audioUrl: ''
           },
           {
             word: 'Abril',
             english: 'April',
             pinyin: 'A-bril',
-            image: 'Abril.gif',
+            image: 'Recursos/Gifs/Abril.gif',
             audioUrl: ''
           },
           {
             word: 'mayo',
             english: 'May',
             pinyin: 'Ma-yo',
-            image: 'Mayo.gif',
+            image: 'Recursos/Gifs/Mayo.gif',
             audioUrl: ''
           },
           {
             word: 'Junio',
             english: 'June',
             pinyin: 'Ju-nio',
-            image: 'Junio.gif',
+            image: 'Recursos/Gifs/Junio.gif',
             audioUrl: ''
           },
           {
             word: 'Julio',
             english: 'July',
             pinyin: 'Ju-lio',
-            image: 'Julio.gif',
+            image: 'Recursos/Gifs/Julio.gif',
             audioUrl: ''
           },
           {
             word: 'Agosto',
             english: 'Agust',
             pinyin: 'A-gos-to',
-            image: 'Agosto.gif',
+            image: 'Recursos/Gifs/Agosto.gif',
             audioUrl: ''
           },
           {
             word: 'Septiembre',
             english: 'September',
             pinyin: 'Sep-tiem-bre',
-            image: 'Septiembre.gif',
+            image: 'Recursos/Gifs/Septiembre.gif',
             audioUrl: ''
           },
           {
             word: 'Octubre',
             english: 'october',
             pinyin: 'oc-tu-bre',
-            image: 'Octubre.gif',
+            image: 'Recursos/Gifs/Octubre.gif',
             audioUrl: ''
           },
           {
             word: 'Noviembre',
             english: 'November',
             pinyin: 'no-viem-bre',
-            image: 'Noviembre.gif',
+            image: 'Recursos/Gifs/Noviembre.gif',
             audioUrl: ''
           },
+          
           {
             word: 'Diciembre',
             english: 'December',
             pinyin: 'Diciembre',
-            image: 'Diciembre.gif',
+            image: 'Recursos/Gifs/Diciembre.gif',
             audioUrl: ''
 
           }
@@ -699,6 +796,7 @@
       const currentCard = cards[appState.currentCardIndex];
       
       cardImage.src = currentCard.image;
+      gameCardImage.src = currentCard.image;
       cardWord.textContent = currentCard.word;
       cardEnglish.textContent = currentCard.english;
       cardPinyin.textContent = currentCard.pinyin;
@@ -730,12 +828,15 @@
       const progress = (appState.completedCards / cards.length) * 100;
       progressBar.style.width = `${progress}%`;
       progressBar.textContent = `${Math.round(progress)}%`;
+      gameProgressBar.style.width = `${progress}%`;
+      gameProgressBar.textContent = `${Math.round(progress)}%`;
     }
     
     // Show summary screen
     function showSummary() {
       welcomeScreen.classList.add('hidden');
       learningScreen.classList.add('hidden');
+      gameScreen.classList.add('hidden');
       summaryScreen.classList.remove('hidden');
       
       document.getElementById('summary-progress').style.width = '100%';
@@ -751,7 +852,7 @@
       saveAppState();
       
       welcomeScreen.classList.add('hidden');
-      learningScreen.classList.remove('hidden');
+      hiddenLearnOrGame();
       summaryScreen.classList.add('hidden');
       
       showCurrentCard();
