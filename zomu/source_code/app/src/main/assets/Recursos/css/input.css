@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+body {
+  font-family: "Comic Neue", cursive;
+  background-color: #f9fafb;
+  /*background-image: url('https://cdn.pixabay.com/photo/2019/04/14/10/27/book-4126483_1280.jpg');*/
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+
+.card {
+  perspective: 1000px;
+  height: 400px;
+  transition: transform 0.6s;
+}
+
+.progress-bar {
+  transition: width 0.5s ease-in-out;
+}
+
+.animate-bounce-custom {
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.theme-card {
+  transition: all 0.3s ease;
+}
+
+.theme-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #f00;
+  border-radius: 50%;
+  animation: fall 3s ease-in infinite;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
