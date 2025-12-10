@@ -188,12 +188,21 @@
                 <div
                   class="h-64 bg-gray-100 flex items-center justify-center overflow-hidden"
                 >
-                  <img
+<!--
+                <img
                     id="game-card-image"
                     src=""
                     alt="Imagen de seña"
                     class="w-full h-full object-contain"
                   />
+--> 
+                  <iframe 
+                      id="game-card-image" 
+                      src=""  
+                      frameborder="0" 
+                      allowfullscreen
+                      class="w-full h-full object-contain"
+                      ></iframe>
                 </div>
 
                 <!-- Card content -->
@@ -326,12 +335,20 @@
                 <div
                   class="h-64 bg-gray-100 flex items-center justify-center overflow-hidden"
                 >
-                  <img
+<!--                  <img
                     id="card-image"
                     src=""
                     alt="Imagen de seña"
                     class="w-full h-full object-contain"
-                  />
+                  /> 
+-->
+                  <iframe 
+                      id="card-image" 
+                      src="" 
+                      frameborder="0" 
+                      allowfullscreen
+                      class="w-full h-full object-contain"
+                      ></iframe>
                 </div>
 
                 <!-- Card content -->
@@ -355,7 +372,7 @@
                   <div class="bg-yellow-50 rounded-lg p-3 mb-4 text-center">
                     <div>
                       <p class="text-sm font-bold text-yellow-800">
-                        Pronunciación:
+                        Palabra:
                       </p>
                       <p id="card-pinyin" class="text-lg text-yellow-700"></p>
                     </div>
@@ -430,6 +447,11 @@
     </div>
 
     <script id="app-script">
+      // Correr cuando cargue la página
+      document.addEventListener('DOMContentLoaded', function() {
+        cargarArchivoGifs();
+      });
+
       // Local storage keys
       const STORAGE_KEY = "senasmex_app";
       const CARDS_KEY = "senasmex_cards";
@@ -589,380 +611,282 @@
         gameScreen.classList.add("hidden");
         summaryScreen.classList.add("hidden");
       }
+// Reemplaza TODO el contenido del script desde la línea donde dice "// Cargar el archivo al inicio de tu aplicación"
 
-      // Sample card data - this would come from an API in a real app
-      let cards = [];
+// Cargar el archivo al inicio de tu aplicación
+let gifsArchivoTxt = []; // Array parseado
+let cards = [];
 
-      // Fetch cards from API (simulated)
-      function fetchCards() {
-        const savedCards = localStorage.getItem(CARDS_KEY);
-        if (savedCards) {
-          //cards = JSON.parse(savedCards);
-          //showCurrentCard();
-          //return;
+// Función para cargar el archivo
+async function cargarArchivoGifs() {
+  try {
+    console.log('Cargando archivo de GIFs...');
+    const respuesta = await fetch('Recursos/ArchivosPlanos/gifs.txt');
+    
+    if (!respuesta.ok) {
+      throw new Error(`HTTP ${respuesta.status}: ${respuesta.statusText}`);
+    }
+    
+    const contenidoTxt = await respuesta.text();
+    console.log('Archivo cargado, tamaño:', contenidoTxt.length, 'caracteres');
+    
+    // Parsear el contenido
+    gifsArchivoTxt = parseGifsArchivoTxt(contenidoTxt);
+    
+    console.log(`Archivo parseado: ${gifsArchivoTxt.length} elementos cargados`);
+    console.log('Ejemplo de primer elemento:', gifsArchivoTxt[0]);
+    
+  } catch (error) {
+    console.error('Error al cargar el archivo:', error);
+    // Cargar datos de ejemplo
+    cargarDatosEjemplo();
+  }
+}
+
+// Función para cargar datos de ejemplo si falla
+function cargarDatosEjemplo() {
+  console.log('Usando datos de ejemplo');
+  gifsArchivoTxt = [
+    {
+      nombre: "Enero",
+      DriveLink: "https://drive.google.com/file/d/1wnqdkv-JJ7sqOtxS7E29eN8wUw8Hmyhq/view",
+      tema: "calendario"
+    },
+    {
+      nombre: "Febrero",
+      DriveLink: "https://drive.google.com/file/d/1wnqdkv-JJ7sqOtxS7E29eN8wUw8Hmyhq/view",
+      tema: "calendario"
+    }
+  ];
+}
+
+// Parsear archivo a formato legible
+function parseGifsArchivoTxt(contenidoTxt) {
+  const lineas = contenidoTxt.split('\n');
+  console.log(`Parseando ${lineas.length} líneas`);
+  
+  const resultado = lineas
+    .filter(linea => {
+      const trimmed = linea.trim();
+      return trimmed !== '' && trimmed.startsWith('[') && trimmed.endsWith(']');
+    })
+    .map(linea => {
+      try {
+        // Quitar corchetes
+        const sinCorchetes = linea.trim().slice(1, -1);
+        // Dividir por comas
+        const partes = sinCorchetes.split(',').map(part => part.trim());
+        
+        if (partes.length >= 3) {
+          return {
+            nombre: partes[0],
+            DriveLink: partes[1],
+            tema: partes[2]
+          };
         }
+      } catch (error) {
+        console.warn('Error parseando línea:', linea, error);
+      }
+      return null;
+    })
+    .filter(item => item !== null);
+  
+  console.log(`Parseados ${resultado.length} elementos válidos`);
+  return resultado;
+}
 
-        // Simulate fetching cards based on theme and level
-        if (appState.selectedTheme === "animales") {
-          cards = [
-            {
-              // ESTO DE AQUI
-              word: "Edduuuuuar",
-              english: "Dog",
-              pinyin: "PE-RRO",
-              image: "https://media.tenor.com/wt3RTvjtRC4AAAAm/dancing-dance.webp",
-              audioUrl: "",
-            },
-            {
-              word: "Gato",
-              english: "Cat",
-              pinyin: "GA-TO",
-              image: "https://media.tenor.com/IBO1XfWk1PUAAAAM/banana-cat.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Conejo",
-              english: "Rabbit",
-              pinyin: "CO-NE-JO",
-              image:
-                "https://media.tenor.com/HVYnFgAmwrgAAAAM/bugs-bunny-pointing-finger.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Pájaro",
-              english: "Bird",
-              pinyin: "PA-JA-RO",
-              image:
-                "https://media.tenor.com/-DhkW-bvz7UAAAAM/bad-not.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Caballo",
-              english: "Horse",
-              pinyin: "CA-BA-LLO",
-              image:
-                "https://media.tenor.com/glmFrPhNnGwAAAAM/juan.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Vaca",
-              english: "Cow",
-              pinyin: "VA-CA",
-              image:
-                "https://media.tenor.com/68ASPXtLqvkAAAAM/marcelina-laura.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Elefante",
-              english: "Elephant",
-              pinyin: "E-LE-FAN-TE",
-              image:
-                "https://media.tenor.com/pqS-PrUP_QsAAAAM/elephant-walk.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Tortuga",
-              english: "Turtle",
-              pinyin: "TOR-TU-GA",
-              image:
-                "https://media.tenor.com/4EiZDgdEe2AAAAAM/aahh.gif",
-              audioUrl: "",
-            },
-            {
-              word: "León",
-              english: "Lion",
-              pinyin: "LE-ON",
-              image:
-                "https://media.tenor.com/7M3F0QVd9f4AAAAM/thelionking-lionking.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Mono",
-              english: "Monkey",
-              pinyin: "MO-NO",
-              image:
-                "https://media.tenor.com/Rw79THUmPjIAAAAM/happy-birthday-jason.gif",
-              audioUrl: "",
-            },
-          ];
-        } else if (appState.selectedTheme === "comida") {
-          cards = [
-            {
-              word: "Manzana",
-              english: "Apple",
-              pinyin: "MAN-ZA-NA",
-              image:
-                "https://media.tenor.com/6gpbqWCQKzsAAAA1/apple-eating-apple.webp",
-              audioUrl: "",
-            },
-            {
-              word: "Pan",
-              english: "Bread",
-              pinyin: "PAN",
-              image:
-                "https://media.tenor.com/Kr0tCdLYeigAAAAM/bang-dream-bandori.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Leche",
-              english: "Milk",
-              pinyin: "LE-CHE",
-              image:
-                "https://media.tenor.com/5CwgYd6kF98AAAAM/anime-milk.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Agua",
-              english: "Water",
-              pinyin: "A-GUA",
-              image:
-                "https://media.tenor.com/ShSl8NH7UJQAAAAM/%D0%BC%D0%B0%D1%82%D0%B5%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B0.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Huevo",
-              english: "Egg",
-              pinyin: "HUE-VO",
-              image:
-                "https://media.tenor.com/E1fCNebYrZEAAAAM/mechupaunhuevo.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Pollo",
-              english: "Chicken",
-              pinyin: "PO-LLO",
-              image:
-                "https://media.tenor.com/MoDlBj4M2EAAAAAM/chicken.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Pasta",
-              english: "Pasta",
-              pinyin: "PAS-TA",
-              image:
-                "https://media.tenor.com/A5jHg7xy7MMAAAAM/pasta-pasta-recipe.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Queso",
-              english: "Cheese",
-              pinyin: "QUE-SO",
-              image:
-                "https://media.tenor.com/hh6zQ8DjSAAAAAAM/cheese.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Arroz",
-              english: "Rice",
-              pinyin: "A-RROZ",
-              image:
-                "https://media.tenor.com/TlDrE-wIs6gAAAAM/rice-basmati.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Helado",
-              english: "Ice cream",
-              pinyin: "HE-LA-DO",
-              image:
-                "https://media.tenor.com/-8mEMjkhqjoAAAAM/alya-sometimes-hides-her-feelings-in-russian-alya.gif",
-              audioUrl: "",
-            },
-          ];
-        } else if (appState.selectedTheme === "cotidiano") {
-          cards = [
-            {
-              word: "Casa",
-              english: "House",
-              pinyin: "CA-SA",
-              image:
-                "https://media.tenor.com/u9NhJJBoElgAAAAM/home-alone.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Familia",
-              english: "Family",
-              pinyin: "FA-MI-LIA",
-              image:
-                "https://media.tenor.com/YB_3cysN3RYAAAAM/vin-diesel-staring.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Escuela",
-              english: "School",
-              pinyin: "ES-CUE-LA",
-              image:
-                "https://media.tenor.com/8gZxqwPqP7IAAAAM/school-of-ruck-rucka-rucka-ali.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Amigo",
-              english: "Friend",
-              pinyin: "A-MI-GO",
-              image:
-                "https://media.tenor.com/-94mjZ4_zuQAAAAM/mejores-amigos.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Jugar",
-              english: "To play",
-              pinyin: "JU-GAR",
-              image:
-                "https://media.tenor.com/Cd6im47UEVoAAAAm/i-want-to-play-a-game-lets-play.webp",
-              audioUrl: "",
-            },
-            {
-              word: "Dormir",
-              english: "To sleep",
-              pinyin: "DOR-MIR",
-              image:
-                "https://media.tenor.com/Cj0YvuE94eoAAAAM/onimai-anime-sleep.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Baño",
-              english: "Bathroom",
-              pinyin: "BA-ÑO",
-              image:
-                "https://media.tenor.com/CdsbLovpCDgAAAAM/toilet-toilet-paper.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Comer",
-              english: "To eat",
-              pinyin: "CO-MER",
-              image:
-                "https://media.tenor.com/x0vcdktgS-gAAAAM/para-de-comeeerrr.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Calle",
-              english: "Street",
-              pinyin: "CA-LLE",
-              image:
-                "https://media.tenor.com/yERPJlLaTHsAAAAM/cruising-night-life.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Parque",
-              english: "Park",
-              pinyin: "PAR-QUE",
-              image:
-                "https://media.tenor.com/Yl0FSsRpBvwAAAAM/park.gif",
-              audioUrl: "",
-            },
-          ];
-        } else if (appState.selectedTheme === "calendario") {
-          cards = [
-            {
-              word: "Enero",
-              english: "January",
-              pinyin: "Ene-ro",
-              image: "Recursos/Gifs/Enero.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Febrero",
-              english: "February",
-              pinyin: "Fe-bre-ro",
-              image: "Recursos/Gifs/Febrero.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Marzo",
-              english: "March",
-              pinyin: "Mar-zo",
-              image: "Recursos/Gifs/Marzo.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Abril",
-              english: "April",
-              pinyin: "A-bril",
-              image: "Recursos/Gifs/Abril.gif",
-              audioUrl: "",
-            },
-            {
-              word: "mayo",
-              english: "May",
-              pinyin: "Ma-yo",
-              image: "Recursos/Gifs/Mayo.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Junio",
-              english: "June",
-              pinyin: "Ju-nio",
-              image: "Recursos/Gifs/Junio.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Julio",
-              english: "July",
-              pinyin: "Ju-lio",
-              image: "Recursos/Gifs/Julio.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Agosto",
-              english: "Agust",
-              pinyin: "A-gos-to",
-              image: "Recursos/Gifs/Agosto.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Septiembre",
-              english: "September",
-              pinyin: "Sep-tiem-bre",
-              image: "Recursos/Gifs/Septiembre.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Octubre",
-              english: "october",
-              pinyin: "oc-tu-bre",
-              image: "Recursos/Gifs/Octubre.gif",
-              audioUrl: "",
-            },
-            {
-              word: "Noviembre",
-              english: "November",
-              pinyin: "no-viem-bre",
-              image: "Recursos/Gifs/Noviembre.gif",
-              audioUrl: "",
-            },
-
-            {
-              word: "Diciembre",
-              english: "December",
-              pinyin: "Diciembre",
-              image: "Recursos/Gifs/Diciembre.gif",
-              audioUrl: "",
-            },
-          ];
-        }
-
-        localStorage.setItem(CARDS_KEY, JSON.stringify(cards));
+// Fetch cards from API (simulated)
+function fetchCards() {
+  console.log('fetchCards llamado con tema:', appState.selectedTheme);
+  
+  // Limpiar localStorage para debug (opcional)
+  // localStorage.removeItem(CARDS_KEY);
+  
+  const savedCards = localStorage.getItem(CARDS_KEY);
+  
+  // Intentar usar cartas guardadas solo si son del mismo tema
+  if (savedCards) {
+    try {
+      const parsedCards = JSON.parse(savedCards);
+      if (parsedCards.length > 0 && parsedCards[0].tema === appState.selectedTheme) {
+        cards = parsedCards;
+        console.log(`${cards.length} cartas cargadas desde localStorage`);
         showCurrentCard();
+        return;
       }
+    } catch (e) {
+      console.error('Error parseando localStorage:', e);
+    }
+  }
+  
+  // Verificar si el archivo ya se cargó
+  if (gifsArchivoTxt.length === 0) {
+    console.warn('El archivo de GIFs aún no se ha cargado completamente');
+    cardWord.textContent = "Cargando cartas...";
+    
+    // Intentar cargar de nuevo después de un tiempo
+    setTimeout(() => {
+      fetchCards();
+    }, 1000);
+    return;
+  }
+  
+  // Filtrar cartas por tema
+  const cartasFiltradas = gifsArchivoTxt.filter(carta => {
+    return carta.tema === appState.selectedTheme;
+  });
+  
+  console.log(`Encontradas ${cartasFiltradas.length} cartas para tema "${appState.selectedTheme}"`);
+  
+  if (cartasFiltradas.length === 0) {
+    console.warn(`No hay cartas para el tema: ${appState.selectedTheme}`);
+    cardWord.textContent = `No hay cartas para "${themeNames[appState.selectedTheme]}"`;
+    return;
+  }
+  
+  // Crear cartas con iframe
+  cards = cartasFiltradas.map(carta => ({
+    word: carta.nombre,
+    english: "",
+    pinyin: carta.nombre,
+    image: driveToIframeUrl(carta.DriveLink),
+    audioUrl: "",
+    tema: carta.tema // Guardar tema para referencia
+  }));
+  
+  console.log(`${cards.length} cartas creadas`);
+  
+  // Guardar en localStorage
+  localStorage.setItem(CARDS_KEY, JSON.stringify(cards));
+  
+  showCurrentCard();
+}
 
-      // Show current card
-      function showCurrentCard() {
-        if (appState.currentCardIndex >= cards.length) {
-          showSummary();
-          return;
-        }
+// Función CORREGIDA que transforma una URL de Google Drive en enlace iframe
+function driveToIframeUrl(driveUrl) {
+  console.log('Convirtiendo URL:', driveUrl);
+  
+  if (!driveUrl) {
+    console.error('URL vacía');
+    return '';
+  }
+  
+  try {
+    // Extraer el ID del archivo
+    const match = driveUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      const fileId = match[1];
+      // URL CORRECTA para iframe de Google Drive
+      const iframeUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+      console.log('URL convertida a:', iframeUrl);
+      return iframeUrl;
+    } else {
+      console.warn('No se pudo extraer ID de la URL:', driveUrl);
+      return driveUrl; // Devolver URL original como fallback
+    }
+  } catch (error) {
+    console.error('Error procesando URL:', error, driveUrl);
+    return driveUrl; // Devolver URL original como fallback
+  }
+}
 
-        const currentCard = cards[appState.currentCardIndex];
+// Show current card - FUNCIÓN CORREGIDA
+function showCurrentCard() {
+  console.log('showCurrentCard llamado. Índice:', appState.currentCardIndex, 'Total cartas:', cards.length);
+  
+  if (!cards || cards.length === 0) {
+    console.warn('No hay cartas para mostrar');
+    cardWord.textContent = "No hay cartas disponibles";
+    return;
+  }
+  
+  if (appState.currentCardIndex >= cards.length) {
+    console.log('Fin de las cartas, mostrando resumen');
+    showSummary();
+    return;
+  }
+  
+  const currentCard = cards[appState.currentCardIndex];
+  console.log('Mostrando carta:', currentCard);
+  
+  // Determinar qué pantalla está activa
+  const isLearningScreen = !learningScreen.classList.contains('hidden');
+  const isGameScreen = !gameScreen.classList.contains('hidden');
+  
+  // Obtener el iframe correcto según la pantalla activa
+  let targetIframe;
+  if (isLearningScreen) {
+    targetIframe = document.getElementById('card-image');
+  } else if (isGameScreen) {
+    targetIframe = document.getElementById('game-card-image');
+  }
+  
+  // Actualizar iframe si existe
+  if (targetIframe && currentCard.image) {
+    console.log('Estableciendo iframe src:', currentCard.image);
+    targetIframe.src = currentCard.image;
+    
+    // Manejar errores del iframe
+    targetIframe.onload = function() {
+      console.log('Iframe cargado correctamente');
+    };
+    
+    targetIframe.onerror = function() {
+      console.error('Error al cargar el iframe');
+      // Mostrar mensaje de error
+          };
+  } else {
+    console.warn('No se encontró iframe objetivo o la carta no tiene imagen');
+  }
+  
+  // Actualizar texto (usando los elementos correctos según la pantalla)
+  cardWord.textContent = currentCard.word;
+  cardEnglish.textContent = currentCard.english;
+  cardPinyin.textContent = currentCard.pinyin;
+  
+  // Actualizar progreso
+  updateProgress();
+}
 
-        cardImage.src = currentCard.image;
-        gameCardImage.src = currentCard.image;
-        cardWord.textContent = currentCard.word;
-        cardEnglish.textContent = currentCard.english;
-        cardPinyin.textContent = currentCard.pinyin;
+// Modificar la función startLearning para asegurar que el archivo se cargue
+async function startLearning() {
+  console.log('Iniciando aprendizaje...');
+  
+  appState.currentCardIndex = 0;
+  appState.completedCards = 0;
+  saveAppState();
+  
+  // Asegurarnos de que el archivo esté cargado
+  if (gifsArchivoTxt.length === 0) {
+    console.log('El archivo no está cargado aún, cargando...');
+    await cargarArchivoGifs();
+  }
+  
+  // Actualizar displays
+  themeDisplay.textContent = `Tema: ${themeNames[appState.selectedTheme]}`;
+  levelDisplay.textContent = `Nivel: ${levelNames[appState.selectedLevel]}`;
+  gameThemeDisplay.textContent = `Tema: ${themeNames[appState.selectedTheme]}`;
+  gameLevelDisplay.textContent = `Nivel: ${levelNames[appState.selectedLevel]}`;
+  
+  welcomeScreen.classList.add("hidden");
+  hiddenLearnOrGame();
+  summaryScreen.classList.add("hidden");
+  
+  // Mostrar mensaje de carga
+  cardWord.textContent = "Cargando cartas...";
+  
+  // Cargar cartas después de un breve delay
+  setTimeout(() => {
+    fetchCards();
+  }, 100);
+}
 
-        updateProgress();
-      }
-
+// Asegurar que el archivo se cargue al inicio
+document.addEventListener('DOMContentLoaded', async function() {
+  console.log('DOM cargado, iniciando carga de archivo...');
+  await cargarArchivoGifs();
+  console.log('Carga inicial completada');
+});
       // Show next card
       function showNextCard() {
         appState.currentCardIndex++;
